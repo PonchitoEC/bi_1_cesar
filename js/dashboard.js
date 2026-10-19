@@ -102,6 +102,8 @@ function initializeFilters() {
     button.addEventListener('click', () => sortTable(button.dataset.sort));
   });
   document.querySelector('#theme-toggle').addEventListener('click', toggleTheme);
+  document.querySelector('#export-data').addEventListener('click', exportFilteredData);
+  document.querySelector('#print-dashboard').addEventListener('click', () => window.print());
   radarOne.addEventListener('change', renderRadarChart);
   radarTwo.addEventListener('change', renderRadarChart);
 }
@@ -365,6 +367,38 @@ function renderTable(teams = getFilteredTeams()) {
       button.removeAttribute('aria-sort');
     }
   });
+}
+
+function exportFilteredData() {
+  const headers = ['Posición', 'Equipo', 'Puntos', 'Partidos jugados', 'Ganados', 'Empatados', 'Perdidos', 'Goles a favor', 'Goles en contra', 'Diferencia de goles', 'Posesión (%)', 'Tiros al arco', 'Tarjetas amarillas', 'Tarjetas rojas', 'Asistencia promedio'];
+  const rows = getFilteredTeams().map((team) => [
+    team.position,
+    team.name,
+    team.points,
+    team.played,
+    team.won,
+    team.drawn,
+    team.lost,
+    team.goalsFor,
+    team.goalsAgainst,
+    team.goalDifference,
+    team.possession.toFixed(1).replace('.', ','),
+    team.shots,
+    team.yellowCards,
+    team.redCards,
+    team.attendance
+  ]);
+  const escapeCell = (value) => `"${String(value).replaceAll('"', '""')}"`;
+  const csv = [headers, ...rows].map((row) => row.map(escapeCell).join(';')).join('\r\n');
+  const downloadUrl = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }));
+  const downloadLink = document.createElement('a');
+  const teamSlug = state.team === 'all' ? 'todos' : state.team.toLowerCase().replaceAll(' ', '-');
+  downloadLink.href = downloadUrl;
+  downloadLink.download = `liga-pro-2026-jornada-${String(state.round).padStart(2, '0')}-${teamSlug}.csv`;
+  document.body.append(downloadLink);
+  downloadLink.click();
+  downloadLink.remove();
+  URL.revokeObjectURL(downloadUrl);
 }
 
 function renderInsights(teams) {

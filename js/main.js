@@ -2,16 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearElement = document.querySelector('#current-year');
   if (yearElement) yearElement.textContent = new Date().getFullYear();
 
-  const themeButton = document.querySelector('#theme-toggle');
+  const lightButton = document.querySelector('#theme-light');
+  const darkButton = document.querySelector('#theme-dark');
   const applyTheme = (isDark) => {
     document.body.classList.toggle('dark-mode', isDark);
-    if (themeButton) {
-      const label = isDark ? 'Tema claro' : 'Tema oscuro';
-      themeButton.setAttribute('aria-label', `Cambiar a ${isDark ? 'tema claro' : 'tema oscuro'}`);
-      themeButton.title = `Cambiar a ${isDark ? 'tema claro' : 'tema oscuro'}`;
-      themeButton.querySelector('i').className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
-      themeButton.querySelector('span').textContent = label;
-    }
+    lightButton?.setAttribute('aria-pressed', String(!isDark));
+    darkButton?.setAttribute('aria-pressed', String(isDark));
   };
 
   let savedTheme = 'light';
@@ -21,11 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
     savedTheme = 'light';
   }
   applyTheme(savedTheme === 'dark');
-  themeButton?.addEventListener('click', () => {
-    const isDark = !document.body.classList.contains('dark-mode');
-    applyTheme(isDark);
+  lightButton?.addEventListener('click', () => {
+    applyTheme(false);
     try {
-      localStorage.setItem('bi-academy-theme', isDark ? 'dark' : 'light');
+      localStorage.setItem('bi-academy-theme', 'light');
+    } catch (error) {
+      // El cambio visual sigue funcionando si el navegador bloquea el almacenamiento.
+    }
+  });
+  darkButton?.addEventListener('click', () => {
+    applyTheme(true);
+    try {
+      localStorage.setItem('bi-academy-theme', 'dark');
     } catch (error) {
       // El cambio visual sigue funcionando si el navegador bloquea el almacenamiento.
     }
