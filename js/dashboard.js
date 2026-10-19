@@ -66,6 +66,16 @@ function getLeagueTotals() {
 
 function initializeFilters() {
   const roundFilter = document.querySelector('#round-filter');
+  const teamFilter = document.querySelector('#team-filter');
+  const radarOne = document.querySelector('#radar-team-one');
+  const radarTwo = document.querySelector('#radar-team-two');
+  const teamSearch = document.querySelector('#team-search');
+  const themeToggle = document.querySelector('#theme-toggle');
+  const exportButton = document.querySelector('#export-data');
+  const printButton = document.querySelector('#print-dashboard');
+
+  if (!roundFilter || !teamFilter || !radarOne || !radarTwo) return;
+
   for (let round = 1; round <= seasonLength; round += 1) {
     const option = document.createElement('option');
     option.value = round;
@@ -73,9 +83,6 @@ function initializeFilters() {
     roundFilter.append(option);
   }
   roundFilter.value = state.round;
-  const teamFilter = document.querySelector('#team-filter');
-  const radarOne = document.querySelector('#radar-team-one');
-  const radarTwo = document.querySelector('#radar-team-two');
 
   teamSeasonData.forEach((team) => {
     const teamOption = new Option(team.name, team.name);
@@ -94,16 +101,16 @@ function initializeFilters() {
     state.team = teamFilter.value;
     renderDashboard();
   });
-  document.querySelector('#team-search').addEventListener('input', (event) => {
+  teamSearch?.addEventListener('input', (event) => {
     state.search = event.target.value.trim();
     renderTable();
   });
   document.querySelectorAll('[data-sort]').forEach((button) => {
     button.addEventListener('click', () => sortTable(button.dataset.sort));
   });
-  document.querySelector('#theme-toggle').addEventListener('click', toggleTheme);
-  document.querySelector('#export-data').addEventListener('click', exportFilteredData);
-  document.querySelector('#print-dashboard').addEventListener('click', () => window.print());
+  themeToggle?.addEventListener('click', toggleTheme);
+  exportButton?.addEventListener('click', exportFilteredData);
+  printButton?.addEventListener('click', () => window.print());
   radarOne.addEventListener('change', renderRadarChart);
   radarTwo.addEventListener('change', renderRadarChart);
 }
@@ -418,11 +425,14 @@ function renderInsights(teams) {
 }
 
 function toggleTheme() {
-  const isDark = document.body.classList.toggle('dark-mode');
   const button = document.querySelector('#theme-toggle');
+  if (!document.body || !button) return;
+
+  const isDark = document.body.classList.toggle('dark-mode');
   button.setAttribute('aria-label', isDark ? 'Activar modo claro' : 'Activar modo oscuro');
   button.title = isDark ? 'Activar modo claro' : 'Activar modo oscuro';
-  button.querySelector('i').className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
+  const icon = button.querySelector('i');
+  if (icon) icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
   try {
     localStorage.setItem('bi-academy-theme', isDark ? 'dark' : 'light');
   } catch (error) {
@@ -446,9 +456,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('bi-academy-theme') === 'dark') {
       document.body.classList.add('dark-mode');
       const themeButton = document.querySelector('#theme-toggle');
-      themeButton.setAttribute('aria-label', 'Activar modo claro');
-      themeButton.title = 'Activar modo claro';
-      themeButton.querySelector('i').className = 'bi bi-sun';
+      if (themeButton) {
+        themeButton.setAttribute('aria-label', 'Activar modo claro');
+        themeButton.title = 'Activar modo claro';
+        const icon = themeButton.querySelector('i');
+        if (icon) icon.className = 'bi bi-sun';
+      }
     }
   } catch (error) {
     // El tema predeterminado es claro si el almacenamiento no está disponible.

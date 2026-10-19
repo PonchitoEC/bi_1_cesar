@@ -89,13 +89,14 @@ function updateProgress() {
   const progressBar = document.querySelector('#quiz-progress-bar');
   const progressTrack = document.querySelector('.quiz-progress-track');
   const progressText = document.querySelector('#quiz-progress-text');
-  progressBar.style.width = `${(completed / quizQuestions.length) * 100}%`;
-  progressTrack.setAttribute('aria-valuenow', completed);
-  progressText.textContent = `Pregunta ${Math.min(quizState.index + 1, quizQuestions.length)} de ${quizQuestions.length}`;
+  if (progressBar) progressBar.style.width = `${(completed / quizQuestions.length) * 100}%`;
+  if (progressTrack) progressTrack.setAttribute('aria-valuenow', completed);
+  if (progressText) progressText.textContent = `Pregunta ${Math.min(quizState.index + 1, quizQuestions.length)} de ${quizQuestions.length}`;
 }
 
 function updateLives() {
   const livesContainer = document.querySelector('#quiz-lives');
+  if (!livesContainer) return;
   [...livesContainer.children].forEach((heart, index) => heart.classList.toggle('life-lost', index >= quizState.lives));
   livesContainer.setAttribute('aria-label', `${quizState.lives} ${quizState.lives === 1 ? 'vida' : 'vidas'} restantes`);
 }
