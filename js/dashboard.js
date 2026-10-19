@@ -389,6 +389,11 @@ function toggleTheme() {
   button.setAttribute('aria-label', isDark ? 'Activar modo claro' : 'Activar modo oscuro');
   button.title = isDark ? 'Activar modo claro' : 'Activar modo oscuro';
   button.querySelector('i').className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
+  try {
+    localStorage.setItem('bi-academy-theme', isDark ? 'dark' : 'light');
+  } catch (error) {
+    // El cambio visual sigue funcionando si el navegador bloquea el almacenamiento.
+  }
   Object.values(chartInstances).forEach((chart) => {
     chart.options.scales && Object.values(chart.options.scales).forEach((scale) => {
       if (scale.ticks) scale.ticks.color = chartTextColor();
@@ -403,6 +408,17 @@ function toggleTheme() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  try {
+    if (localStorage.getItem('bi-academy-theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      const themeButton = document.querySelector('#theme-toggle');
+      themeButton.setAttribute('aria-label', 'Activar modo claro');
+      themeButton.title = 'Activar modo claro';
+      themeButton.querySelector('i').className = 'bi bi-sun';
+    }
+  } catch (error) {
+    // El tema predeterminado es claro si el almacenamiento no está disponible.
+  }
   initializeFilters();
   renderDashboard();
 });
