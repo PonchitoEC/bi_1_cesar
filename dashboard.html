@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b46">
+  <meta name="description" content="Dashboard educativo con estadísticas simuladas de Liga Pro 2026.">
+  <title>Liga Pro 2026 | Dashboard Analítico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#dashboard-main">Saltar al dashboard</a>
+  <header class="dashboard-header">
+    <div class="container-fluid dashboard-header-inner">
+      <a class="dashboard-brand" href="index.html" aria-label="BI Academy, regresar a fundamentos"><span class="dashboard-brand-mark"><i class="bi bi-bar-chart-fill" aria-hidden="true"></i></span><span>BI <b>Academy</b><small>ANÁLISIS DEPORTIVO</small></span></a>
+      <div class="dashboard-title"><span class="league-kicker"><i class="bi bi-circle-fill" aria-hidden="true"></i> TEMPORADA SIMULADA</span><h1>Liga Pro 2026 <span>— Dashboard Analítico</span></h1></div>
+      <a class="back-link" href="index.html"><i class="bi bi-arrow-left" aria-hidden="true"></i><span>Fundamentos BI</span></a>
+    </div>
+  </header>
+  <main class="dashboard-main container-fluid" id="dashboard-main">
+    <section class="dashboard-controls" aria-label="Filtros del dashboard">
+      <div class="filter-group"><label for="round-filter">Jornada</label><select id="round-filter" class="form-select" aria-label="Filtrar por jornada"></select></div>
+      <div class="filter-group"><label for="team-filter">Equipo</label><select id="team-filter" class="form-select" aria-label="Filtrar por equipo"><option value="all">Todos los equipos</option></select></div>
+      <div class="filter-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Datos ficticios con fines educativos</div>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Activar modo oscuro" title="Cambiar tema"><i class="bi bi-moon-stars" aria-hidden="true"></i></button>
+    </section>
+
+    <section class="kpi-grid" aria-label="Indicadores clave">
+      <article class="kpi-card"><div class="kpi-top"><span>PARTIDOS JUGADOS</span><span class="kpi-icon icon-cyan"><i class="bi bi-calendar2-check" aria-hidden="true"></i></span></div><div class="kpi-value" id="kpi-matches">0</div><div class="kpi-foot"><span class="trend-neutral"><i class="bi bi-dot" aria-hidden="true"></i> Liga simulada</span><span>hasta jornada actual</span></div></article>
+      <article class="kpi-card"><div class="kpi-top"><span>GOLES EN EL TORNEO</span><span class="kpi-icon icon-orange"><i class="bi bi-bullseye" aria-hidden="true"></i></span></div><div class="kpi-value" id="kpi-goals">0</div><div class="kpi-foot"><span class="trend-up"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i> <span id="kpi-goal-rate">0</span> por jornada</span><span>total acumulado</span></div></article>
+      <article class="kpi-card"><div class="kpi-top"><span>EQUIPO LÍDER</span><span class="kpi-icon icon-green"><i class="bi bi-trophy" aria-hidden="true"></i></span></div><div class="kpi-value kpi-leader" id="kpi-leader">—</div><div class="kpi-foot"><span class="trend-up"><i class="bi bi-arrow-up-right" aria-hidden="true"></i> <span id="kpi-leader-points">0 pts</span></span><span>en la selección</span></div></article>
+      <article class="kpi-card"><div class="kpi-top"><span>GOLES POR PARTIDO</span><span class="kpi-icon icon-blue"><i class="bi bi-bar-chart-line" aria-hidden="true"></i></span></div><div class="kpi-value" id="kpi-average">0.00</div><div class="kpi-foot"><span class="trend-neutral"><i class="bi bi-dash" aria-hidden="true"></i> Promedio</span><span>en el torneo</span></div></article>
+    </section>
+
+    <section class="chart-grid primary-charts" aria-label="Rendimiento de equipos y resultados">
+      <article class="panel panel-wide"><div class="panel-heading"><div><span class="panel-kicker">CLASIFICACIÓN</span><h2>Tabla de posiciones</h2><p>Puntos acumulados · top 10</p></div><span class="panel-icon"><i class="bi bi-bar-chart-steps" aria-hidden="true"></i></span></div><div class="chart-frame standings-frame"><canvas id="standings-chart" role="img" aria-label="Gráfico de barras de puntos por equipo"></canvas></div></article>
+      <article class="panel"><div class="panel-heading"><div><span class="panel-kicker">RESULTADOS</span><h2>Distribución de partidos</h2><p>Local, visitante y empate</p></div><span class="panel-icon"><i class="bi bi-pie-chart" aria-hidden="true"></i></span></div><div class="chart-frame doughnut-frame"><canvas id="results-chart" role="img" aria-label="Gráfico de dona con distribución de resultados"></canvas></div><div class="result-legend" id="results-legend"></div></article>
+    </section>
+
+    <section class="chart-grid secondary-charts" aria-label="Evolución y comparativa de clubes">
+      <article class="panel panel-wide"><div class="panel-heading"><div><span class="panel-kicker">TENDENCIA</span><h2>Puntos por jornada</h2><p>Evolución de los cinco equipos mejor ubicados</p></div><span class="panel-icon"><i class="bi bi-activity" aria-hidden="true"></i></span></div><div class="chart-frame trend-frame"><canvas id="points-chart" role="img" aria-label="Gráfico de líneas de puntos por jornada"></canvas></div></article>
+      <article class="panel"><div class="panel-heading"><div><span class="panel-kicker">PERFILES</span><h2>Comparar equipos</h2><p>Indicadores normalizados sobre 100</p></div><span class="panel-icon"><i class="bi bi-bounding-box-circles" aria-hidden="true"></i></span></div><div class="radar-filters"><select id="radar-team-one" class="form-select" aria-label="Primer equipo para comparar"></select><select id="radar-team-two" class="form-select" aria-label="Segundo equipo para comparar"></select></div><div class="chart-frame radar-frame"><canvas id="radar-chart" role="img" aria-label="Gráfico radar para comparar dos equipos"></canvas></div></article>
+    </section>
+
+    <section class="panel table-panel" aria-labelledby="table-title"><div class="panel-heading table-heading"><div><span class="panel-kicker">DETALLE POR CLUB</span><h2 id="table-title">Estadísticas de equipos</h2><p>Ordena cualquier columna seleccionando su encabezado</p></div><label class="team-search"><i class="bi bi-search" aria-hidden="true"></i><span class="visually-hidden">Buscar equipo</span><input id="team-search" type="search" placeholder="Buscar equipo…" autocomplete="off"></label></div><div class="table-responsive"><table class="stats-table"><thead><tr><th scope="col"><button data-sort="position" type="button"># <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="name" type="button">Equipo <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="points" type="button">Pts <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="played" type="button">PJ <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="won" type="button">PG <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="drawn" type="button">PE <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="lost" type="button">PP <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="goalsFor" type="button">GF <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="goalsAgainst" type="button">GC <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="goalDifference" type="button">DG <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="possession" type="button">Pos. <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="shots" type="button">Tiros <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="yellowCards" type="button">TA <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="redCards" type="button">TR <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th><th scope="col"><button data-sort="attendance" type="button">Asistencia <i class="bi bi-arrow-down-up" aria-hidden="true"></i></button></th></tr></thead><tbody id="stats-table-body"></tbody></table></div><div class="table-foot"><span id="table-count">10 equipos</span><span>PJ partidos jugados · GF goles a favor · GC goles en contra · TA/TR tarjetas</span></div></section>
+
+    <section class="panel goals-panel"><div class="panel-heading"><div><span class="panel-kicker">PRODUCCIÓN OFENSIVA</span><h2>Goles por jornada</h2><p>Comparación entre goles locales y visitantes</p></div><span class="panel-icon"><i class="bi bi-bar-chart-line-fill" aria-hidden="true"></i></span></div><div class="chart-frame goals-frame"><canvas id="goals-chart" role="img" aria-label="Barras apiladas con goles locales y visitantes por jornada"></canvas></div></section>
+
+    <section class="insights-section" aria-labelledby="insights-title"><div class="insights-heading"><div><span class="panel-kicker">LECTURA DEL MOMENTO</span><h2 id="insights-title">Insights del torneo</h2></div><span class="insights-generated"><i class="bi bi-stars" aria-hidden="true"></i> Generados desde los datos filtrados</span></div><div class="insights-grid" id="insights-grid"></div></section>
+    <footer class="dashboard-footer"><span>BI Academy · Proyecto educativo</span><span>Fuente: datos simulados para Liga Pro 2026 · No son estadísticas oficiales</span><a href="index.html">Volver a fundamentos <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></footer>
+  </main>
+</body>
+</html>
